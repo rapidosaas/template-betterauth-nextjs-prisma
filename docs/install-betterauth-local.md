@@ -44,3 +44,68 @@ Enfin, lancez votre projet :
 ``` sh
 npm run dev
 ``` 
+
+### 6️⃣ Installer les modules supplémentaires
+Avant d'aller plus loin, installons pg, dotenv et les types nécessaires.
+```sh
+npm install pg dotenv
+npm install -D @types/pg
+```
+
+### 7️⃣ Création du fichier de configuration d’authentification locale
+Ajoutez un fichier src/lib/auth-local.ts :
+```ts
+import { betterAuth } from "better-auth";
+import { Pool } from "pg";
+
+import dotenv from "dotenv";
+
+dotenv.config(); // Charger les variables d'environnement
+
+export const auth = betterAuth({
+    database: new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+    }),
+});
+```
+✅ Ce fichier configure BetterAuth pour utiliser PostgreSQL en local.
+
+### 8️⃣ Vérifier la connexion à la base de données
+Ajoutez un fichier src/lib/test-auth-local.ts pour tester la connexion :
+```ts
+import pg from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const { Pool } = pg;
+
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+});
+
+async function testConnection() {
+    try {
+        const client = await pool.connect();
+        const res = await client.query("SELECT NOW()");
+        console.log("✅ Connexion réussie à PostgreSQL (LOCAL) - Date serveur :", res.rows[0].now);
+        client.release();
+    } catch (error) {
+        console.error("❌ Erreur de connexion à PostgreSQL (LOCAL) :", error);
+    } finally {
+        await pool.end();
+    }
+}
+
+testConnection();
+```  
+
+#### Exécuter le test :
+``` sh
+npx tsx src/lib/test-auth-local.ts
+``` 
+#### Résultat attendu :
+``` sql
+✅ Connexion réussie à PostgreSQL (LOCAL) - Date serveur : 2025-03-15T15:11:54.743Z
+``` 
