@@ -134,7 +134,7 @@ SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
 ``` 
 ✅ Si tout est correct, vous devriez voir les nouvelles tables de BetterAuth apparaître.
 
-### 🔟 Configuration des méthodes d'authentification, du gestionnaire de routes et de l'instance cliente  
+### 1️⃣0️⃣ Configuration des méthodes d'authentification, du gestionnaire de routes et de l'instance cliente  
 - 1️⃣ Configuration des méthodes d'authentification  
 Dans votre fichier d’authentification (**auth-local.ts** ou **auth-prod.ts**), , assurez-vous que l’authentification par **email et mot de passe** est bien activée en ajoutant ces paramètres :  
 ```ts  
@@ -147,3 +147,18 @@ emailAndPassword: {
 Le fichier `/src/app/api/auth/[...all]/route.ts` permet d'exposer les routes d'authentification côté API Next.js.  
 - 3️⃣ Création de l'instance cliente  
 Le fichier `/src/lib/auth-client.ts` gère l'authentification côté client et permet d’interagir avec l’authentification dans les composants React.
+
+### 1️⃣1️⃣ Mise à jour de la base de données en local (PostgreSQL - pgAdmin4)   
+Après avoir supprimé manuellement le champ `emailVerified` dans `pg\better-auth\migrations.sql`, il est nécessaire de s'assurer que la base de données PostgreSQL locale est bien synchronisée et reflète les dernières modifications. Pour cela se rendre sur pgAdmin4 et vider la base de données en ouvrant l’éditeur SQL et en cliquant sur "Query Tool".  
+```sql DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+```
+✅ Cela supprime complètement toutes les tables et les recrée avec un schéma vide. 
+Re-exécuter la requête de creations des tables à jour en intégrant le contenu a jour du fichier `pg\better-auth\migrations.sql`.
+près avoir appliqué la migration, vérifiez que la colonne a bien disparu.  
+```sql 
+SELECT column_name FROM information_schema.columns WHERE table_name = 'user';
+```  
+✅ Si emailVerified n’apparaît plus, la suppression a bien été appliquée.
+
+
