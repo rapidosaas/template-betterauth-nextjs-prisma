@@ -124,3 +124,17 @@ npx prisma migrate deploy
 npx prisma db push
 ```  
 🚀 Votre base de données est maintenant prête à être utilisée avec Prisma et BetterAuth ! ✅
+
+### 🔟 Configuration des méthodes d'authentification, du gestionnaire de routes et de l'instance cliente  
+- 1️⃣ Configuration des méthodes d'authentification  
+Dans votre fichier d’authentification (**auth-local.ts** ou **auth-prod.ts**), , assurez-vous que l’authentification par **email et mot de passe** est bien activée en ajoutant ces paramètres :  
+```ts  
+emailAndPassword: {
+    enabled: true,
+    autoSignIn: false,
+}
+```  
+- 2️⃣ Mise en place du gestionnaire de routes   
+Le fichier `/src/app/api/auth/[...all]/route.ts` permet d'exposer les routes d'authentification côté API Next.js.  
+- 3️⃣ Création de l'instance cliente  
+Le fichier `/src/lib/auth-client.ts` gère l'authentification côté client et permet d’interagir avec l’authentification dans les composants React.
