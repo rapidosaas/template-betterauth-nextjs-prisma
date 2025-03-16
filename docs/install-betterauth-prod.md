@@ -125,7 +125,7 @@ npx prisma db push
 ```  
 🚀 Votre base de données est maintenant prête à être utilisée avec Prisma et BetterAuth ! ✅
 
-### 🔟 Configuration des méthodes d'authentification, du gestionnaire de routes et de l'instance cliente  
+### 1️⃣0️⃣ Configuration des méthodes d'authentification, du gestionnaire de routes et de l'instance cliente  
 - 1️⃣ Configuration des méthodes d'authentification  
 Dans votre fichier d’authentification (**auth-local.ts** ou **auth-prod.ts**), , assurez-vous que l’authentification par **email et mot de passe** est bien activée en ajoutant ces paramètres :  
 ```ts  
@@ -138,3 +138,42 @@ emailAndPassword: {
 Le fichier `/src/app/api/auth/[...all]/route.ts` permet d'exposer les routes d'authentification côté API Next.js.  
 - 3️⃣ Création de l'instance cliente  
 Le fichier `/src/lib/auth-client.ts` gère l'authentification côté client et permet d’interagir avec l’authentification dans les composants React.
+
+
+### 1️⃣1️⃣ Mise à jour de la base de données en production (Neon.tech)
+Après avoir modifié le schema.prisma, il est nécessaire de mettre à jour la base de données Neon.tech pour synchroniser les nouvelles tables et supprimer le champ emailVerified.
+
+- 1️⃣ Réinitialiser la base de données sur Neon.tech  
+⚠️ Attention : Cette commande va supprimer toutes les données existantes et recréer la base avec les nouvelles migrations.  
+Assurez-vous d’avoir une sauvegarde si nécessaire. Exécutez la commande suivante :  
+    ```sh  
+    npx prisma migrate reset
+    ```  
+    ✅ Cela va :
+        - Supprimer et recréer la base de données.
+        - Appliquer toutes les migrations existantes.
+- 2️⃣ Appliquer la nouvelle migration pour supprimer le champs **emailVerified**
+    Une fois la base réinitialisée, créez une nouvelle migration avec Prisma :
+    ```sh
+    npx prisma migrate dev --name remove_emailVerified_field
+    ```  
+    ✅ Cela va :
+        - Générer une nouvelle migration nommée `remove_email_verified_field`.
+        - Mettre à jour le schéma de la base de données sur Neon.tech.
+- 3️⃣ Vérifier les modifications
+    Pour s’assurer que tout a bien été appliqué, exécutez les commandes suivantes :  
+    Vérifier l’état des migrations appliquées :  
+    ```sh
+    npx prisma migrate status
+    ```  
+    ✅ Cela permet de voir si toutes les migrations sont bien appliquées sur la base de données.  
+    Explorer la base de données graphiquement :
+    ```sh
+    npx prisma studio
+    ```  
+    ✅ Cela permet de visualiser et vérifier les nouvelles tables et champs.
+
+
+
+
+
