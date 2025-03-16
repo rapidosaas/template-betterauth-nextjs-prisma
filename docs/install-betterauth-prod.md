@@ -96,3 +96,31 @@ npx tsx src/lib/test-auth-prod.ts
 ``` sql
 ✅ Connexion réussie à PostgreSQL (PRISMA) - Date serveur : 2025-03-15T15:15:21.936Z
 ``` 
+
+### 9️⃣ Générer et appliquer les migrations BetterAuth en prod  
+BetterAuth nécessite des tables spécifiques pour gérer l'authentification.  
+Générez le schéma Prisma avec la commande suivante :  
+```sh
+npx @better-auth/cli generate --config src/lib/auth-prod.ts --output prisma/schema.prisma
+```  
+*(Si la commande échoue, assurez-vous que le dossier `prisma` sinon créez-le manuellement si nécessaire.)* 
+
+🛠 Création de la base de données sur Neon.tech via Vercel
+Pour utiliser une base de données PostgreSQL en production avec Neon.tech, suivez ces étapes :
+
+- 1️⃣ Accédez à Vercel et ouvrez votre projet.
+- 2️⃣ Allez dans l’onglet "Storage", puis cliquez sur "Add a Database".
+- 3️⃣ Sélectionnez Neon.tech comme fournisseur.
+- 4️⃣ Configurez votre base de données et récupérez l'URL de connexion.
+- 5️⃣ Assignez cette URL à la variable **DATABASE_URL** de votre fichier .env.  
+
+🔄 Appliquer la migration vers Neon.tech  
+Une fois la base de données prête, appliquez la migration Prisma pour créer les tables BetterAuth : 
+```sh
+npx prisma migrate deploy
+```  
+👉 Si vous préférez pousser le schéma sans migrations, utilisez plutôt :
+```sh  
+npx prisma db push
+```  
+🚀 Votre base de données est maintenant prête à être utilisée avec Prisma et BetterAuth ! ✅
