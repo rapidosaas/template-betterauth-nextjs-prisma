@@ -8,23 +8,21 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
+  id        String      @id @default(uuid())
+  email     String      @unique
+  name      String?
+  image     String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  accounts  Account[]
+  sessions  Session[]
 
-  @@unique([email])
   @@map("user")
 }
-
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -32,7 +30,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@map("session")
 }
 
@@ -41,16 +38,16 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
-  password              String?
+  password              String
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
