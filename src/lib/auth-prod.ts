@@ -6,6 +6,18 @@ import { cache } from "react";
 import { headers } from "next/headers";
 
 const prisma = new PrismaClient();
+
+prisma.$use(async (params, next) => {
+  if (params.model === "User" && params.action === "create") {
+      console.log("🛠️ Prisma intercepte la création :", params.args.data);
+      // 🔥 Supprimer `emailVerified` si présent
+      if (params.args.data.emailVerified !== undefined) {
+          delete params.args.data.emailVerified;
+      }
+  }
+  return next(params);
+});
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
