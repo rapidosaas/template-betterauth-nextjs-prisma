@@ -1,8 +1,7 @@
-import { auth as localAuth } from "@/lib/auth-local";
-import { auth as prodAuth } from "@/lib/auth-prod";
 import { toNextJsHandler } from "better-auth/next-js";
 
-const isLocalDB = process.env.DATABASE_URL?.includes("localhost");
-export const auth = isLocalDB ? localAuth : prodAuth;
+/*import { auth as localAuth } from "@/lib/auth-local";
+export const { GET, POST } = toNextJsHandler(localAuth.handler);*/
 
-export const { GET, POST } = toNextJsHandler(auth);
+import { auth as prodAuth } from "@/lib/auth-prod";
+export const { GET, POST } = toNextJsHandler(prodAuth.handler);
