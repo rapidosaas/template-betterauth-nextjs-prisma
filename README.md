@@ -26,6 +26,4 @@ Suivez l'un des guides ci-dessous selon votre configuration :
 
 ## Donations to the contributors
 
-[![](https://img.shields.io/badge/Nazim%20%20Boudeffa's%20%20-TIPEEE-pink)](https://fr.tipeee.com/nazimboudeffa)  
-
 [![](https://img.shields.io/badge/Salim%20%20Benfarhat's%20%20-PAYPAL-blue)](https://salim.link/paypal) 
